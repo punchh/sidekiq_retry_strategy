@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "lib/p_retry_strategy/version"
+require_relative "lib/sidekiq_retry_strategy/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "p_retry_strategy"
+  spec.name          = "sidekiq_retry_strategy"
   spec.version       = SidekiqRetryStrategy::VERSION
   spec.authors       = ["Punchh CAN Team"]
   spec.email         = ["morenobiage@partech.com"]
@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
 
   # Metadata for publishing
   spec.metadata["homepage_uri"]    = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/your-username/p_retry_strategy"
-  spec.metadata["changelog_uri"]   = "https://github.com/your-username/p_retry_strategy/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/your-username/sidekiq_retry_strategy"
+  spec.metadata["changelog_uri"]   = "https://github.com/your-username/sidekiq_retry_strategy/blob/main/CHANGELOG.md"
 
   # Files to include in the gem
   spec.files = Dir.glob("lib/**/*") + ["README.md", "LICENSE.txt"]

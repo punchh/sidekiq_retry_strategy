@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require_relative "test_helper"
 require "sidekiq/testing"
-require_relative "../lib/p_retry_strategy/custom_retry_logic"
+require_relative "../lib/sidekiq_retry_strategy/custom_retry_logic"
 
 class CustomRetryLogicTest < ActiveSupport::TestCase
   # Define a mock worker to test the logic with and without overrides

@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in p_retry_strategy.gemspec
+# Specify your gem's dependencies in sidekiq_retry_strategy.gemspec
 gemspec
 
 gem "rake", "~> 13.0"

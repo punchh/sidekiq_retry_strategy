@@ -11,7 +11,7 @@ module SidekiqRetryStrategy
     end
 
     def load_retry_settings
-      config_path = Rails.root.join('config', 'p_retry_strategy.yml')
+      config_path = Rails.root.join('config', 'sidekiq_retry_strategy.yml')
       yaml_settings = YAML.load_file(config_path)
 
       @retry_settings = {
