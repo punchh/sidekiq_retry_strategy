@@ -1,0 +1,45 @@
+# Logfile created on 2024-11-14 10:50:05 -0700 by logger.rb/v1.6.1
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Starting the New Relic agent version 9.15.0 in "development" environment.
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] WARN : No configuration file found. Working directory = /Users/morenobiage/Desktop/punchh-server/p_retry_strategy
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] WARN : Looked in these locations (based on defaults): /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml.erb, /Users/morenobiage/.newrelic/newrelic.yml, /Users/morenobiage/newrelic.yml, /Users/morenobiage/.newrelic/newrelic.yml.erb, /Users/morenobiage/newrelic.yml.erb
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Environment: development
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] INFO : No known dispatcher detected.
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Application: development
+[2024-11-14 10:50:05 -0700 Morenos-MacBook-Pro.local (61608)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing notifications based Active Record instrumentation
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing ActiveSupport instrumentation
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported ActiveSupportBroadcastLogger instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported ConcurrentRuby instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported MonitoredFiber instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported Logger instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing Net:HTTP Wrappers
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported NetHTTP instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing Sidekiq instrumentation
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Installing New Relic supported MonitoredThread instrumentation using Prepend
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : Finished instrumentation
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : New Relic Security is completely disabled by one of the user-provided configurations: `security.agent.enabled` or `high_security`. Not loading security capabilities.
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : high_security = false
+[2024-11-14 10:50:06 -0700 Morenos-MacBook-Pro.local (61608)] INFO : security.agent.enabled = false
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Starting the New Relic agent version 9.15.0 in "development" environment.
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] WARN : No configuration file found. Working directory = /Users/morenobiage/Desktop/punchh-server/p_retry_strategy
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] WARN : Looked in these locations (based on defaults): /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/config/newrelic.yml.erb, /Users/morenobiage/Desktop/punchh-server/p_retry_strategy/newrelic.yml.erb, /Users/morenobiage/.newrelic/newrelic.yml, /Users/morenobiage/newrelic.yml, /Users/morenobiage/.newrelic/newrelic.yml.erb, /Users/morenobiage/newrelic.yml.erb
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Environment: development
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : No known dispatcher detected.
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Application: development
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing notifications based Active Record instrumentation
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing ActiveSupport instrumentation
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported ActiveSupportBroadcastLogger instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported ConcurrentRuby instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported MonitoredFiber instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported Logger instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing Net:HTTP Wrappers
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported NetHTTP instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing Sidekiq instrumentation
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Installing New Relic supported MonitoredThread instrumentation using Prepend
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : Finished instrumentation
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : New Relic Security is completely disabled by one of the user-provided configurations: `security.agent.enabled` or `high_security`. Not loading security capabilities.
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : high_security = false
+[2024-11-14 10:51:47 -0700 Morenos-MacBook-Pro.local (63437)] INFO : security.agent.enabled = false
