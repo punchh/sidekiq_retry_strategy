@@ -37,6 +37,7 @@ service = ExampleService.new
 service.perform_operation
 ```
 
+
 This will retry the block of code up to 5 times with depending on which retry strategy is selected.
 
 ### Advanced Usage: Overriding Methods
