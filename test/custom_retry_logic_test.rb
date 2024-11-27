@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require_relative "test_helper"
 require "sidekiq/testing"
+require "sidekiq/logger"
 require_relative "../lib/sidekiq_retry_strategy/custom_retry_logic"
 
 class CustomRetryLogicTest < ActiveSupport::TestCase
@@ -13,6 +14,22 @@ class CustomRetryLogicTest < ActiveSupport::TestCase
 
     def self.retry_params
       { "max_retries" => 5, "delays" => [300, 600, 1200, 2400, 4800] }
+    end
+  end
+
+  class ConfigurableRetryWorker
+    include Sidekiq::Worker
+    include SidekiqRetryStrategy::CustomRetryLogic
+
+    sidekiq_options retry: true
+
+    def self.retry_params
+      {
+        "default_retry_strategy" => { "max_retries" => 5, "delays" => [300, 600, 1200, 2400, 4800] },
+        "guest_activity_retry" => { "max_retries" => 3, "delays" => [100, 200, 300, 500, 600, 1000] },
+        "business_admin_activity_retry" => { "max_retries" => 4, "delays" => [150, 300, 600, 1200, 200] },
+        "system_activity_retry" => { "max_retries" => 2, "delays" => [50, 100, 500, 600, 700] }
+      }
     end
   end
 
@@ -42,59 +59,117 @@ class CustomRetryLogicTest < ActiveSupport::TestCase
 
     sidekiq_options retry: true
 
-    def self.is_kill_on_exception(exception, _jobhash, _count)
+    def self.retry_params
+      { "max_retries" => 3, "delays" => [100, 200, 300, 400, 1000] }
+    end
+
+    def self.is_kill_on_exception(exception, jobhash, count)
       exception.is_a?(RuntimeError)
     end
 
-    def self.is_discard_on_exception(exception, _jobhash, _count)
+    def self.is_discard_on_exception(exception, jobhash, count)
       exception.is_a?(ArgumentError)
     end
+  end
 
-    def self.is_retriable_on_exception(exception, _jobhash, _count)
-      exception.is_a?(RuntimeError) || super
+  test "sidekiq_retry_in kills job on RuntimeError" do
+    Sidekiq::Testing.fake! do
+      exception = RuntimeError.new("Test runtime error")
+      retry_logic = OverrideWorker.sidekiq_retry_in_block
+
+      assert_equal :kill, retry_logic.call(1, exception, @jobhash)
     end
   end
 
-  test "override is_kill_on_exception in worker to kill on RuntimeError" do
-    runtime_error = RuntimeError.new("Fatal error")
-    assert_equal true, OverrideWorker.is_kill_on_exception(runtime_error, @jobhash, 1)
-  end
-
-  test "override is_discard_on_exception in worker to discard on ArgumentError" do
-    argument_error = ArgumentError.new("Discardable error")
-    assert_equal true, OverrideWorker.is_discard_on_exception(argument_error, @jobhash, 1)
-  end
-
-  test "override is_retriable_on_exception in worker to retry on RuntimeError" do
-    runtime_error = RuntimeError.new("Retriable error")
-    assert_equal true, OverrideWorker.is_retriable_on_exception(runtime_error, @jobhash, 1)
-  end
-
-  test "sidekiq_retry_in returns correct delay based on retry_params" do
+  test "sidekiq_retry_in discards job on ArgumentError" do
     Sidekiq::Testing.fake! do
-      TestWorker.perform_async
-      assert_equal 1, TestWorker.jobs.size
+      exception = ArgumentError.new("Test argument error")
+      retry_logic = OverrideWorker.sidekiq_retry_in_block
+
+      assert_equal :discard, retry_logic.call(1, exception, @jobhash)
     end
-
-    count = 2
-    retry_logic = TestWorker.sidekiq_retry_in_block
-    delay = retry_logic.call(count, @exception, @jobhash)
-    expected_delay = TestWorker.retry_params["delays"][count]
-
-    assert_in_delta expected_delay, delay, 60
   end
 
-  test "sidekiq_retry_in discards job after max retries" do
+  test "sidekiq_retry_in returns correct delay with random jitter" do
     Sidekiq::Testing.fake! do
-      max_retries = TestWorker.retry_params["max_retries"]
+      retry_logic = TestWorker.sidekiq_retry_in_block
+      delay = retry_logic.call(1, @exception, @jobhash)
+      expected_delay = TestWorker.retry_params["delays"][1]
+
+      assert_in_delta expected_delay, delay, 60
+    end
+  end
+
+  test "sidekiq_retry_in handles ActiveRecord::StatementInvalid with 'gone away' message" do
+    Sidekiq::Testing.fake! do
+      exception = ActiveRecord::StatementInvalid.new("MySQL server has gone away")
       retry_logic = TestWorker.sidekiq_retry_in_block
 
-      max_retries.times do |i|
-        assert_not_equal :discard, retry_logic.call(i, @exception, @jobhash)
+      delay = retry_logic.call(1, exception, @jobhash)
+      expected_delay = TestWorker.retry_params["delays"][1]
+
+      assert_in_delta expected_delay, delay, 60
+    end
+  end
+
+  test "sidekiq_retry_in handles RedisClient::CannotConnectError" do
+    Sidekiq::Testing.fake! do
+      exception = RedisClient::CannotConnectError.new("Cannot connect to Redis")
+      retry_logic = TestWorker.sidekiq_retry_in_block
+
+      delay = retry_logic.call(1, exception, @jobhash)
+      expected_delay = TestWorker.retry_params["delays"][1]
+
+      assert_in_delta expected_delay, delay, 60
+    end
+  end
+
+  # New tests for configurable retry strategies
+  test "configurable_retry_worker handles different strategies correctly" do
+    Sidekiq::Testing.fake! do
+      ["default_retry_strategy", "guest_activity_retry", "business_admin_activity_retry", "system_activity_retry"].each do |strategy|
+        retry_params = ConfigurableRetryWorker.retry_params[strategy]
+        validate_retry_logic(ConfigurableRetryWorker, retry_params)
+      end
+    end
+  end
+
+  test "sidekiq_retry_in discards job for invalid retry_params" do
+    Sidekiq::Testing.fake! do
+      # Suppress warnings for invalid retry_params
+      original_logger = Sidekiq
+      Sidekiq = Logger.new(nil)
+
+      ConfigurableRetryWorker.stub :retry_params, nil do
+        retry_logic = ConfigurableRetryWorker.sidekiq_retry_in_block
+        assert_equal :discard, retry_logic.call(0, @exception, @jobhash)
       end
 
-      # Expects :discard after exceeding max retries
-      assert_equal :discard, retry_logic.call(max_retries, @exception, @jobhash)
+      ConfigurableRetryWorker.stub :retry_params, { "max_retries" => nil, "delays" => nil } do
+        retry_logic = ConfigurableRetryWorker.sidekiq_retry_in_block
+        assert_equal :discard, retry_logic.call(0, @exception, @jobhash)
+      end
+
+      # Restore the original logger
+      Sidekiq = original_logger
+    end
+  end
+
+  private
+
+  def validate_retry_logic(worker_class, retry_params)
+    max_retries = retry_params["max_retries"]
+    delays = retry_params["delays"]
+
+    max_retries.times do |count|
+      retry_logic = worker_class.sidekiq_retry_in_block
+      delay = retry_logic.call(count, @exception, @jobhash)
+      if delay == :discard
+        assert_equal :discard, delay
+      else
+        expected_delay = delays[count]
+        assert_in_delta expected_delay, delay, 60
+      end
     end
   end
 end

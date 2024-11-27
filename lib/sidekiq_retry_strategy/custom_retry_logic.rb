@@ -11,24 +11,29 @@ module SidekiqRetryStrategy
       sidekiq_retry_in do |count, exception, jobhash|
         retry_params = self.retry_params
 
-        max_retries = retry_params['max_retries']
-        delays = retry_params['delays'].size != max_retries ? self.expand_delays_array(retry_params['delays'], max_retries) : retry_params['delays'] 
-
-        if count >= max_retries
-          sidekiq_retries_exhausted_block.call(jobhash, exception)
+        if retry_params.nil? || retry_params['max_retries'].nil? || retry_params['delays'].nil?
+          Sidekiq.logger.warn("Invalid retry_params for #{jobhash['class']} with args #{jobhash['args']}")
           :discard
         else
-          # Call methods that can be overridden by the worker class
-          if is_kill_on_exception(exception, jobhash, count)
-            Sidekiq.logger.error("Permanent Failure for #{jobhash['class']} with #{jobhash['args']}: #{exception.message}")
-            NewRelic::Agent.notice_error(exception)
-            :kill
-          elsif is_discard_on_exception(exception, jobhash, count)
+          max_retries = retry_params['max_retries']
+          delays = retry_params['delays'].size != max_retries ? self.expand_delays_array(retry_params['delays'], max_retries) : retry_params['delays']
+
+          if count >= max_retries
+            sidekiq_retries_exhausted_block.call(jobhash, exception)
             :discard
-          elsif is_retriable_on_exception(exception, jobhash, count)
-            delays[count] + rand(-60..60) # Adding +- 1 minute
           else
-            delays[count] + rand(-60..60) # Adding +- 1 minute
+            # Call methods that can be overridden by the worker class
+            if is_kill_on_exception(exception, jobhash, count)
+              Sidekiq.logger.error("Permanent Failure for #{jobhash['class']} with #{jobhash['args']}: #{exception.message}")
+              NewRelic::Agent.notice_error(exception)
+              :kill
+            elsif is_discard_on_exception(exception, jobhash, count)
+              :discard
+            elsif is_retriable_on_exception(exception, jobhash, count)
+              delays[count] + rand(-60..60) # Adding +- 1 minute
+            else
+              delays[count] + rand(-60..60) # Adding +- 1 minute
+            end
           end
         end
       end
