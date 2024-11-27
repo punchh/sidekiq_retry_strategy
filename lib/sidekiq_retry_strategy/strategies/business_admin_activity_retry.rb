@@ -14,4 +14,3 @@ module SidekiqRetryStrategy
   end
 end
 
-
