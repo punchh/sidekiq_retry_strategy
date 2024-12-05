@@ -1,0 +1,25 @@
+name: Version Tagging
+
+on:
+  push:
+    paths:
+      - 'lib/**/*.rb'
+      - 'VERSION'
+
+jobs:
+  tag_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+      - name: Get version
+        id: get_version
+        run: echo "::set-output name=version::$(ruby -r ./lib/your_gem/version -e 'puts YourGem::VERSION')"
+      - name: Create tag
+        run: |
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin v${{ steps.get_version.outputs.version }}
