@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
 
   # Metadata for publishing
   spec.metadata["homepage_uri"]    = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/your-username/sidekiq_retry_strategy"
-  spec.metadata["changelog_uri"]   = "https://github.com/your-username/sidekiq_retry_strategy/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/punchh/sidekiq_retry_strategy"
+  spec.metadata["changelog_uri"]   = "https://github.com/punchh/sidekiq_retry_strategy/blob/main/CHANGELOG.md"
 
   # Files to include in the gem
   spec.files = Dir.glob("lib/**/*") + ["README.md", "LICENSE.txt"]
@@ -25,7 +25,15 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment or add any runtime dependencies required for the gem to work
-  # Example:
-  # spec.add_runtime_dependency "some_dependency", "~> 1.0"
+  # Runtime dependencies
+  spec.add_runtime_dependency "sidekiq", "~> 7.2", ">= 7.2.4"
+  spec.add_runtime_dependency "activesupport", "~> 7.1", ">= 7.1.3.2"
+  spec.add_runtime_dependency "activerecord", "~> 7.1"
+  spec.add_runtime_dependency "sidekiq-unique-jobs", "~> 8.0", ">= 8.0.10"
+  spec.add_runtime_dependency "sidekiq-failures", "~> 1.0", ">= 1.0.4"
+  spec.add_runtime_dependency "newrelic_rpm", "~> 9.11", ">= 9.11.0"
+
+  # Development dependencies
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "minitest", "~> 5.0"
 end
