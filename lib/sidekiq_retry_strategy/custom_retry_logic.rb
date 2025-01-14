@@ -10,7 +10,7 @@ module SidekiqRetryStrategy
     included do
       sidekiq_retry_in do |count, exception, jobhash|
         set_params_override = self.is_params_overridable(sidekiq_options)
-        retry_params = set_params_override.present? ? set_params_override : self.retry_params.transform_keys(&:to_sym)
+        retry_params = set_params_override.present? ? set_params_override : self.retry_params&.transform_keys(&:to_sym)
 
         if retry_params.nil? || retry_params[:max_retries].nil? || retry_params[:delays].nil?
           Sidekiq.logger.warn("Invalid retry_params for #{jobhash['class']} with args #{jobhash['args']}")

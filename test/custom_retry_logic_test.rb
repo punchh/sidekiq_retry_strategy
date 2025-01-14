@@ -155,6 +155,26 @@ class CustomRetryLogicTest < ActiveSupport::TestCase
     end
   end
 
+  test "sidekiq_retry_in uses overridden retry options" do
+    Sidekiq::Testing.fake! do
+      class OverrideOptionsWorker
+        include Sidekiq::Worker
+        include SidekiqRetryStrategy::CustomRetryLogic
+
+        sidekiq_options retry: true, set_retry_options: { "max_retries" => 2, "delays" => [100, 200] }
+
+        def self.retry_params
+          { "max_retries" => 2, "delays" => [100, 200] }
+        end
+      end
+
+      retry_logic = OverrideOptionsWorker.sidekiq_retry_in_block
+      delay = retry_logic.call(1, @exception, @jobhash)
+      expected_delay = 200
+      assert_equal :discard, delay
+    end
+  end
+
   private
 
   def validate_retry_logic(worker_class, retry_params)
