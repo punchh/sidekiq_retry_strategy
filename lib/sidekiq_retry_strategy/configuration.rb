@@ -12,7 +12,7 @@ module SidekiqRetryStrategy
 
     def load_retry_settings
       config_path = Rails.root.join('config', 'sidekiq_retry_strategy.yml')
-      yaml_settings = YAML.load_file(config_path)
+      yaml_settings = YAML.safe_load(File.read(config_path), aliases: true)
 
       @retry_settings = {
         "default_retry_strategy" => fetch_from_env("DEFAULT_RETRY_STRATEGY", yaml_settings["default_retry_strategy"]),
@@ -20,7 +20,6 @@ module SidekiqRetryStrategy
         "business_admin_activity_retry" => fetch_from_env("BUSINESS_ADMIN_ACTIVITY_RETRY", yaml_settings["business_admin_activity_retry"]),
         "system_activity_retry" => fetch_from_env("SYSTEM_ACTIVITY_RETRY", yaml_settings["system_activity_retry"])
       }
-
     rescue StandardError => e
       Rails.logger.error("Error loading retry strategy configuration: #{e.message}")
       @retry_settings = {}
