@@ -8,11 +8,8 @@ gemspec
 gem "rake", "~> 13.0"
 gem "minitest"
 
-# Active Support for testing utilities
-gem 'activesupport', '~> 7.1', '>= 7.1.3.2'
-
-# ActiveRecord for database-related exception handling
-gem 'activerecord', '~> 7.1'
+gem 'activesupport', '~> 8.0'
+gem 'activerecord', '~> 8.0'
 
 # Backgrounding
 gem 'sidekiq', '~> 7.2', '>= 7.2.4'

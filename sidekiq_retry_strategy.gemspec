@@ -26,9 +26,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Runtime dependencies
-  spec.add_runtime_dependency "sidekiq", "~> 7.2", ">= 7.2.4"
-  spec.add_runtime_dependency "activesupport", "~> 7.1", ">= 7.1.3.2"
-  spec.add_runtime_dependency "activerecord", "~> 7.1"
+  spec.add_runtime_dependency "sidekiq", ">= 7.2.4", "< 8.0"
+  spec.add_runtime_dependency "activesupport", ">= 7.1.3.2", "< 9.0"
+  spec.add_runtime_dependency "activerecord", ">= 7.1.0", "< 9.0"
   spec.add_runtime_dependency "sidekiq-unique-jobs", "~> 8.0", ">= 8.0.10"
   spec.add_runtime_dependency "sidekiq-failures", "~> 1.0", ">= 1.0.4"
   spec.add_runtime_dependency "newrelic_rpm", "~> 9.11", ">= 9.11.0"

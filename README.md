@@ -16,6 +16,10 @@ If Bundler is not being used to manage dependencies, install the gem manually by
 $ gem install sidekiq_retry_strategy
 ```
 
+## Compatibility
+
+This gem is compatible with Rails 8.0 and later. For earlier versions of Rails, use version `0.1.x` of this gem.
+
 ## Usage
 
 ### Basic Usage Example
