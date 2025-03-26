@@ -33,7 +33,7 @@ class ExampleService
   include SidekiqRetryStrategy::Strategies::DefaultRetry
 
   def perform_operation
-  ...
+    # Your operation logic here
   end
 end
 
@@ -41,37 +41,22 @@ service = ExampleService.new
 service.perform_operation
 ```
 
-
 This will retry the block of code up to 5 times with depending on which retry strategy is selected.
 
-### Advanced Usage: Overriding Methods
+### Overriding Retry Options in Workers
 
-If you need to override the default behavior, such as custom logging or dynamic retry logic, you can override the `retry_with_strategy` method.
+You can override the retry options directly in your worker by defining the `set_retry_options` in sidekiq_options. This allows you to specify custom retry parameters for specific workers.
 
 ```ruby
-class CustomRetryService
-  include SidekiqRetryStrategy
+class CouponCampaignExpiryReminder < ApplicationJob
+  sidekiq_options queue: :campaigns, retry: true, set_retry_options: { max_retries: 2, delays: [100, 200] }
 
-  def retry_with_strategy(retries:, delay:)
-    super(retries: retries, delay: delay) do
-      puts "Custom logic before retry"
-      yield
-      puts "Custom logic after retry"
-    end
-  end
+  include SidekiqRetryStrategy::Strategies::BusinessAdminActivityRetry
 
-  def perform_operation
-    retry_with_strategy(retries: 5, delay: 1) do
-      # Your custom retryable operation
-      puts "Trying operation with custom retry..."
-      raise "Custom transient error" if rand < 0.5
-      puts "Custom operation succeeded!"
-    end
+  def perform(*args*)
+    # Your operation logic here
   end
 end
-
-custom_service = CustomRetryService.new
-custom_service.perform_operation
 ```
 
 ### Graphic Representation
@@ -121,6 +106,3 @@ To release a new version:
 ```bash
 $ bundle exec rake release
 ```
-
-
-
